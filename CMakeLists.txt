@@ -8,6 +8,6 @@ add_executable(Snake src/main.c)
 
 target_link_libraries(Snake PRIVATE PThreads4W::PThreads4W)
 
-include(Warnings.cmake)
+#include(Warnings.cmake)
 
 set_property(TARGET Snake PROPERTY C_STANDARD 99)
