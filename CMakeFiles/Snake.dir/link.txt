@@ -1,0 +1,1 @@
+/usr/bin/cc -Wl,--dependency-file=CMakeFiles/Snake.dir/link.d CMakeFiles/Snake.dir/src/main.c.o -o Snake  -lpthread
