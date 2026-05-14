@@ -1,0 +1,3 @@
+/home/xinitrix/progs/Snake-Game/CMakeFiles/Snake.dir
+/home/xinitrix/progs/Snake-Game/CMakeFiles/edit_cache.dir
+/home/xinitrix/progs/Snake-Game/CMakeFiles/rebuild_cache.dir
