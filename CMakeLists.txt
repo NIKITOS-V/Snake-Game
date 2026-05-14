@@ -1,13 +1,40 @@
-﻿cmake_minimum_required (VERSION 4.1.1)
-
+﻿cmake_minimum_required (VERSION 4.0)
 project("Snake")
 
-find_package(PThreads4W CONFIG REQUIRED)
 
+
+
+#------------------------------------------------------------------------------
+# Сборка исполняемого файла
+#------------------------------------------------------------------------------
 add_executable(Snake src/main.c)
 
-target_link_libraries(Snake PRIVATE PThreads4W::PThreads4W)
 
-#include(Warnings.cmake)
 
+
+#------------------------------------------------------------------------------
+# Подключение библиотеки потоков в зависимости от ОС
+#------------------------------------------------------------------------------
+if(WIN32)
+	find_package(PThreads4W CONFIG REQUIRED)
+	target_link_libraries(Snake PRIVATE PThreads4W::PThreads4W)
+else()
+	# Для Linux - линкуем pthread напрямую
+	target_link_libraries(Snake PRIVATE pthread)
+endif()
+
+
+
+
+#------------------------------------------------------------------------------
+# настройки компилятора
+#------------------------------------------------------------------------------
 set_property(TARGET Snake PROPERTY C_STANDARD 99)
+
+
+
+
+#------------------------------------------------------------------------------
+# настройки предупреждений компилятора (опционально)
+#------------------------------------------------------------------------------
+#include(Warnings.cmake)

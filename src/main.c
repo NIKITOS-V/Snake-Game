@@ -1,15 +1,43 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
-#include <Windows.h>
 #include <stdbool.h>
+
+#ifdef _WIN32
+    #include <conio.h>
+    #include <windows.h>
+    #define GETCH() _getch()
+    #define SLEEP(n) Sleep(n)
+#else
+    #include <termios.h>
+    #include <unistd.h>
+
+    int getch_linux(void) {
+        struct termios oldt, newt;
+        int ch;
+
+        tcgetattr(STDIN_FILENO, &oldt);
+        newt = oldt;
+        newt.c_lflag &= ~(ICANON | ECHO);
+        tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+        ch = getchar();
+
+        tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+        return ch;
+    }
+
+    #define GETCH() getch_linux()
+    #define SLEEP(n) usleep((n) * 1000)
+#endif
 
 #include "Settings.h"
 #include "Vector.h"
 #include "GameEntity.h"
 #include "AppData.h"
 #include "Snake.h"
+
+
 
 typedef GameEntity (GameFieldPtr)[FIELD_WIDTH][FIELD_HEIGHT];
 
@@ -137,7 +165,8 @@ GameEntityType check_collision(GameFieldPtr field, Int8Vector new_pos) {
 /* ------ Вывод (вспомогательное) ------ */
 
 void do_ps_delay(int ps) {
-	Sleep(calc_ps_delay(ps));
+	SLEEP(calc_ps_delay(ps));
+	SLEEP(calc_ps_delay(ps));
 }
 
 void endl(void) {
@@ -242,7 +271,8 @@ void* read_keyboard(void* args) {
 	AppData* app = (AppData*) args;
 
 	while (is_read_input_thread_run(app)) {
-		app->pressed_key = _getch();
+		app->pressed_key = GETCH();
+		app->pressed_key = GETCH();
 		do_ps_delay(READ_KEYBOARD_PS);
 	}
 
